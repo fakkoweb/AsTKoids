@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D7D77C27-C378-4A58-98FA-AB14289176BC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Game</RootNamespace>
+    <AssemblyName>Game</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="Game.cs" />
+    <Compile Include="Objects\BigCannon.cs" />
+    <Compile Include="Objects\Cannon.cs" />
+    <Compile Include="Objects\Dreadnaught.cs" />
+    <Compile Include="Objects\Drone.cs" />
+    <Compile Include="Objects\SmallCannon.cs" />
+    <Compile Include="Objects\Types\Properties\Movable.cs" />
+    <Compile Include="Objects\Types\Properties\Damageable.cs" />
+    <Compile Include="Objects\Types\Properties\Orientable.cs" />
+    <Compile Include="Objects\Types\DynamicSubsystem.cs" />
+    <Compile Include="Objects\Types\Properties\Static.cs" />
+    <Compile Include="Objects\Types\Properties\Weapon.cs" />
+    <Compile Include="Objects\Types\StaticSubsystem.cs" />
+    <Compile Include="Objects\Types\Unit.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="States\ScoutingState.cs" />
+    <Compile Include="Units\Types\Pointer.cs" />
+    <Compile Include="Units\Types\Spaceship.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\Types\Kamakazi.cs" />
+    <Compile Include="Units\Types\Melee.cs" />
+    <Compile Include="Units\Types\Ranged.cs" />
+    <Compile Include="Units\Types\Ai\Killem\KillemKamakazi.cs" />
+    <Compile Include="Units\Types\Ai\Killem\KillemMelee.cs" />
+    <Compile Include="Units\Types\Ai\Killem\KillemRanged.cs" />
+    <Compile Include="Units\Types\Ai\Killem\State.cs" />
+    <Compile Include="Units\Types\Ai\Seven\ZackKamakazi.cs" />
+    <Compile Include="Units\Types\Ai\Seven\ZackMelee.cs" />
+    <Compile Include="Units\Types\Ai\Seven\ZackRanged.cs" />
+    <Compile Include="States\AiBattle.cs" />
+    <Compile Include="States\GameState.cs" />
+    <Compile Include="States\SpriteState.cs" />
+    <Compile Include="States\StaticModelState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\References\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Seven, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SevenEngine\References\Seven.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SevenEngine\SevenEngine\SevenEngine.csproj">
+      <Project>{0251cee2-7f70-4fdd-b385-5655eba10330}</Project>
+      <Name>SevenEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+</Project>
