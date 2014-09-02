@@ -7,8 +7,8 @@ using SevenEngine.Imaging;
 using SevenEngine.StaticModels;
 using Seven.Mathematics;
 
-using Game.Units;
 using Game.Objects;
+using OpenTK;
 
 namespace Game.States
 {
@@ -82,26 +82,26 @@ namespace Game.States
 
             //_mountain2 = StaticModelManager.GetModel("Mountain2");
             //_mountain2.Scale = new Vector<float>(3500, 3500, 3500);
-            //_mountain2.Orientation = new Quaternion<float>(0, 0, 0, 0);
+            //_mountain2.Orientation = new Quaternion(0, 0, 0, 0);
             //_mountain2.Position = new Vector<float>(0, 0, 2500);
             /*
             _dreadnaught = new Dreadnaught("player");
             _dreadnaught.StaticModel.Position = new Vector<float>(-10000, 0, 0);
-            _dreadnaught.StaticModel.Orientation = new Quaternion<float>(0, 0, 0, 0);
+            _dreadnaught.StaticModel.Orientation = new Quaternion(0, 0, 0, 0);
             _dreadnaught.StaticModel.Scale = new Vector<float>(20, 20, 20);
             */
             _cannon = new SmallCannon("cannon_base");
             _cannon.StaticModel.Position = new Vector<float>(0, 0, 0);
-            //_cannon.StaticModel.Orientation = new Quaternion<float>(0, 1, 0, 0);
-            angle = -Constants.pi_float/4;
+            //_cannon.StaticModel.Orientation = new Quaternion(0, 1, 0, 0);
+            angle = 0;
             _cannon.StaticModel.Orientation = Geometric.Generate_Quaternion(angle, 0, 1, 0);
             _cannon.StaticModel.Scale = new Vector<float>(20, 20, 20);
 
             /*
             _cannon2 = new SmallCannon("cannon");
             _cannon2.StaticModel.Position = new Vector<float>(0, 0, 0);
-            //_cannon2.StaticModel.Orientation = new Quaternion<float>(0,0,0,1);
-            //_cannon2.StaticModel.Orientation = new Quaternion<float>((float)Math.Sin(-Constants.pi_double / 8), 0, 0, (float)Math.Cos(-Constants.pi_double / 8));
+            //_cannon2.StaticModel.Orientation = new Quaternion(0,0,0,1);
+            //_cannon2.StaticModel.Orientation = new Quaternion((float)Math.Sin(-Constants.pi_double / 8), 0, 0, (float)Math.Cos(-Constants.pi_double / 8));
             _cannon2.StaticModel.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
             _cannon2.StaticModel.Scale = new Vector<float>(20, 20, 20);
             */
@@ -192,11 +192,13 @@ namespace Game.States
 
             
             if (InputManager.Keyboard.Gdown)
-                _cannon.LookAt(new Vector<float>(5,0,0), new Vector<float>(0,1,0));
-                //angle = angle +Constants.pi_float/16;
+                _cannon.LookAt(new Vector<float>(-5,10,0));
+                //angle = angle - Constants.pi_float/ 64;
             else
-                _cannon.LookAt(new Vector<float>(-5,0,0), new Vector<float>(0,1,0));
-                //angle = angle - Constants.pi_float / 16;
+                _cannon.LookAt(new Vector<float>(5,-10,0));
+                //angle = angle + Constants.pi_float / 64;
+
+            //_cannon.StaticModel.OrientationRelative = Quaternion.Slerp(_cannon.StaticModel.OrientationRelative, Geometric.Generate_Quaternion(angle, 0, 1, 0), Game.DeltaTime * 0.001f);
             //_cannon.Orientation = Geometric.Generate_Quaternion(angle, 0, 1, 0);
 
             if (InputManager.Keyboard.Rpressed)

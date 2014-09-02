@@ -16,9 +16,9 @@ namespace Game.Objects
             
         }
 
-        public override void LookAt(Seven.Mathematics.Vector<float> targetRef, Seven.Mathematics.Vector<float> upRef)
+        public override void FreeLookAt(Seven.Mathematics.Vector<float> targetRef, Seven.Mathematics.Vector<float> upRef)
         {
- 	         base.LookAt(targetRef, upRef);
+ 	         base.FreeLookAt(targetRef, upRef);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenTK;
 
 namespace Game.Objects
 {
@@ -66,16 +67,18 @@ namespace Game.Objects
         {
             _cannonTubes = StaticModelManager.GetModel("Cannon_small_model");
             _cannonTubes.Position = new Vector<float>(0, 0, 0);
-            //_cannon.StaticModel.Orientation = new Quaternion<float>(0, 1, 0, 0);
-            _cannonTubes.Orientation = Geometric.Generate_Quaternion(-Constants.pi_float / 4, 1, 0, 0);
+            //_cannon.StaticModel.Orientation = new Quaternion(0, 1, 0, 0);
+            _cannonTubes.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
             _cannonTubes.Scale = new Vector<float>(20, 20, 20);
             _cannonTubes.setParent(_mainModel);
             //TODO set bullet vectors properly
         }
 
-        public override void LookAt(Vector<float> targetRef, Vector<float> upRef)
+        public void LookAt(Vector<float> targetRef)
         {
- 	         base.LookAt(targetRef, upRef);
+
+
+ 	         ConstraintLookAt(targetRef, new Vector<float>(0,1,0), new Vector<float>(0,1,0));
             
             //TODO: look at for base and cannon
 
