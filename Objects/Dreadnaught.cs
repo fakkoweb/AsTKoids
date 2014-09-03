@@ -1,4 +1,5 @@
 ﻿using Game.Objects.Types;
+using OpenTK;
 using Seven.Mathematics;
 using Seven.Structures;
 using SevenEngine;
@@ -61,5 +62,12 @@ namespace Game.Objects
             _ringModels[1] = StaticModelManager.GetModel("Dreadnaught_ringback_model");
           * */
         }
+
+        public void LookAt(Vector<float> targetRef)
+        {
+            Quaternion new_orientation = Geometric.FreeLookAt(_mainModel,targetRef, new Vector<float>(0, 1, 0));
+            _mainModel.OrientationRelative = Quaternion.Slerp(_mainModel.OrientationRelative, new_orientation, Game.DeltaTime * 0.001f);
+        }
+    
     }
 }
