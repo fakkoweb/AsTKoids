@@ -7,6 +7,9 @@ using SevenEngine.Shaders;
 using Game.States;
 
 using OpenTK.Graphics.OpenGL;
+using SevenEngine.Physics.Primitives;
+using OpenTK;
+using Seven.Mathematics;
 
 namespace Game
 {
@@ -195,6 +198,7 @@ namespace Game
 
     public override void InitializeStates()
     {
+
       // LOAD THE GAME STATES HERE
       // Use the static class "StateManager"
       // EXAMPLES:
@@ -209,7 +213,7 @@ namespace Game
         */
 
         
-        StateManager.AddState(new ScoutingState("AiBattle"));
+        StateManager.AddState(new ScoutingState("AiBattle",this));
         // The following line calls the "Load" function of your state.
         // The state must be loaded before you make it the current state.
         StateManager.TriggerStateLoad("AiBattle");
@@ -231,15 +235,16 @@ namespace Game
 
     public override void Update(double elapsedTime)
     {
+      
       // DO NOT UPDATE LOW LEVEL GAME LOGIC HERE!!!
       // Only change states as need be with the static "StateManager" class.
       // EXAMPLES:
         // string stateStatus = StateManager.Update((float)elapsedTime);
         // if (stateStatus == "menuState")
         //  StateManager.ChangeState("menuState");
-
       // NOTE: DO NOT alter this function unless you fully understand it
       string stateStatus = StateManager.Update((float)elapsedTime);
     }
+
   }
 }

@@ -76,15 +76,49 @@ namespace Game.Objects
 
         public void LookAt(Vector<float> targetRef)
         {
-            Quaternion new_base_orientation;
-            Quaternion new_cannon_orientation;
-
-            //Cannon tubes must orient toward target keeping is up-side to its y axis and rotating around its x axis
-            new_base_orientation = Geometric.ConstraintLookAt(_mainModel, targetRef, new Vector<float>(0, 1, 0), new Vector<float>(0, 1, 0));
-            _mainModel.OrientationRelative = Quaternion.Slerp(_mainModel.OrientationRelative, new_base_orientation, Game.DeltaTime * 0.001f);
-            new_cannon_orientation = Geometric.ConstraintLookAt(_cannonTubes, targetRef, new Vector<float>(0, 1, 0), new Vector<float>(1, 0, 0));
             
+            
+            //Transforming relative forward of cannon to world
+            Vector<float> forward = Geometric.Quaternion_Rotate(_mainModel.Orientation.Inverted(), new Vector<float>(0, 0, 1));
+            //Vector<float> forward = new Vector<float>(0, 0, 1);
+            //Projecting world target to XZ plane and normalizing
+            Vector<float> target_project_base = new Vector<float>(targetRef.X, 0, targetRef.Z).Normalize();
+            Vector<float> target_project_cannon = new Vector<float>(0, targetRef.Y, targetRef.Z).Normalize();
+            //Calculating angle between them (around y axis)
+            float angle = (float)(Math.Atan2(target_project_base.Z, -target_project_base.X) - Math.Atan2(forward.Z, forward.X));//(float)Math.Acos( forward.DotProduct(target_project_base) );
+            //Generating the transformation to bring forward to target (around y axis)
+            Quaternion new_base_orientation;
+            new_base_orientation = Geometric.Generate_Quaternion(angle, 0, 1, 0);
+            //Applying transformation
+            _mainModel.OrientationRelative = Quaternion.Slerp(_mainModel.OrientationRelative, _mainModel.OrientationRelative * new_base_orientation, Game.DeltaTime * 0.01f);
+            Output.WriteLine("angolo: " + angle + " x: " + target_project_base.X + " y: " + target_project_base.Y + " z: " + target_project_base.Z);
+            Output.WriteLine("angolo:  + angle2 +  x: " + target_project_cannon.X + " y: " + target_project_cannon.Y + " z: " + target_project_cannon.Z);
+
+            //Transforming relative forward of cannon to world
+            //Vector<float> forward2 = Geometric.Quaternion_Rotate(_cannonTubes.Orientation.Inverted(), new Vector<float>(0, 0, 1));
+            //Vector<float> forward = new Vector<float>(0, 0, 1);
+            //Projecting world target to XZ plane and normalizing
+            //Vector<float> target_project_cannon = new Vector<float>(0, targetRef.Y, targetRef.Z).Normalize();
+            /*//Calculating angle between them (around y axis)
+            float angle2 = (float)(Math.Atan2(target_project_cannon.Z, target_project_cannon.Y) - Math.Atan2(forward2.Z, forward2.Y));//(float)Math.Acos( forward.DotProduct(target_project_base) );
+            //Generating the transformation to bring forward to target (around y axis)
+            Quaternion new_cannon_orientation;
+            new_cannon_orientation = Geometric.Generate_Quaternion(angle2, 1, 0, 0);
+            //Applying transformation
+            _cannonTubes.OrientationRelative = Quaternion.Slerp(_cannonTubes.OrientationRelative, _cannonTubes.OrientationRelative * new_cannon_orientation, Game.DeltaTime * 0.01f);
+            *///Output.WriteLine("angolo:  + angle2 +  x: " + target_project_cannon.X + " y: " + target_project_cannon.Y + " z: " + target_project_cannon.Z);
+
+            
+ 
+            /*
+            //Cannon tubes must orient toward target keeping is up-side to its y axis and rotating around its x axis
+            new_base_orientation = Geometric.FreeLookAt(_mainModel, targetRef, new Vector<float>(0, 1, 0));
+            _mainModel.OrientationRelative = Quaternion.Slerp(_mainModel.OrientationRelative, new_base_orientation, Game.DeltaTime * 0.001f);
+            new_cannon_orientation = Geometric.FreeLookAt(_cannonTubes, targetRef, new Vector<float>(0, 1, 0));
+            _cannonTubes.OrientationRelative = Quaternion.Slerp(_cannonTubes.OrientationRelative, new_cannon_orientation, Game.DeltaTime * 0.001f);
+            */
             //Check if target is reachable within an angle constraint
+            /*
             float angle = (float)(2 * Math.Acos(new_cannon_orientation.W));
             Output.WriteLine("Angle: " + angle);
             if (angle > 0 && angle < Constants.pi_float / 2)
@@ -97,6 +131,7 @@ namespace Game.Objects
             {
                 Output.WriteLine("NO orientation");
             }
+             * */
 
             //Cannon base must orient toward target keeping is up-side to its y axis and rotating around its y axis
             
