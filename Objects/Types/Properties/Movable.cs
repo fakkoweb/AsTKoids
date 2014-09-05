@@ -1,4 +1,5 @@
-﻿using Seven.Mathematics;
+﻿using OpenTK;
+using Seven.Mathematics;
 using SevenEngine.StaticModels;
 using System;
 using System.Collections.Generic;
@@ -11,18 +12,18 @@ namespace Game.Objects.Types.Properties
     class Movable : Orientable
     {
         protected float _maxSpeed;
-        protected Vector<float> _velocity;
+        protected Vector3 _velocity;
         protected float _maxAcceleration;
 
-        public float Speed { get { return Vector<float>.Magnitude(_velocity); } }
-        public Vector<float> Velocity { get { return _velocity; } }
+        public float Speed { get { return _velocity.Length; } }
+        public Vector3 Velocity { get { return _velocity; } }
 
         public Movable(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance, float maxSpeed, float maxAcceleration)
             : base(id, staticModel, maxRotSpeed, viewDistance)
         {
             _maxSpeed = maxSpeed;
             _maxAcceleration = maxAcceleration;
-            _velocity = new Vector<float>(0, 0, 0);
+            _velocity = new Vector3(0, 0, 0);
         }
 
         public Movable(string id, string staticModel, float maxRotSpeed, float viewDistance, float maxSpeed, float maxAcceleration)
@@ -30,32 +31,33 @@ namespace Game.Objects.Types.Properties
         {
             _maxSpeed = maxSpeed;
             _maxAcceleration = maxAcceleration;
-            _velocity = new Vector<float>(0, 0, 0);
+            _velocity = new Vector3(0, 0, 0);
         }
 
-        public void MoveTowards(Vector<float> target)
+        public void MoveTowards(Vector3 target)
         {
             //This algorithm makes this model move to the defined position. Position can be set again any time
             _mainModel.Position = getCinematics(_mainModel.Position, target, ref _velocity, _maxSpeed, _maxAcceleration);
         }
 
-        private bool isEnoughBrakingSpace(Vector<float> xt, Vector<float> xf, Vector<float> vt, float vmax, float amax)
+        private bool isEnoughBrakingSpace(Vector3 xt, Vector3 xf, Vector3 vt, float vmax, float amax)
         {
-            return Vector<float>.Magnitude(xf - xt) > vmax * Game.DeltaTime + Math.Pow(Vector<float>.Magnitude(vt), 2) / (2f * amax);
+            return (xf-xt).Length > vmax * Game.DeltaTime + Math.Pow(vt.Length, 2) / (2f * amax);
         }
 
-        private Vector<float> getCinematics(Vector<float> xt, Vector<float> xf, ref Vector<float> vt, float vmax, float amax)
+        private Vector3 getCinematics(Vector3 xt, Vector3 xf, ref Vector3 vt, float vmax, float amax)
         {
 
             if (xf != xt)
             {
-                Vector<float> vt_versor = (xf - xt).Normalize();
-                float vt_magnitude = Vector<float>.Magnitude(vt);
+                float delta = (xf - xt).Length;
+                Vector3 vt_versor = (xf - xt).Normalized();
+                float vt_magnitude = vt.Length;
 
                 if (isEnoughBrakingSpace(xt, xf, vt, vmax, amax))
                 {
-                    Vector<float> vt_next = vt_versor * (vt_magnitude + amax * Game.DeltaTime);
-                    if (vt_magnitude < vmax && Vector<float>.Magnitude(vt_next) < vmax)
+                    Vector3 vt_next = vt_versor * (vt_magnitude + amax * Game.DeltaTime);
+                    if (vt_magnitude < vmax && vt.Length < vmax)
                     {
                         vt = vt_next;
                     }
@@ -66,18 +68,18 @@ namespace Game.Objects.Types.Properties
                 }
                 else
                 {
-                    Vector<float> vt_next = vt_versor * (vt_magnitude - amax * Game.DeltaTime);
-                    if (vt_magnitude > vmax && Vector<float>.Magnitude(vt_next) > vmax)
+                    Vector3 vt_next = vt_versor * (vt_magnitude - amax * Game.DeltaTime);
+                    if (vt_magnitude > vmax && vt_next.Length > vmax)
                     {
                         vt = vt_next;
                     }
-                    else if (Vector<float>.Magnitude(xf - xt) > 0)
+                    else if (delta > 0)
                     {
-                        vt = vt_versor * Vector<float>.Magnitude(xf - xt);
+                        vt = vt_versor * delta;
                     }
                     else
                     {
-                        vt = new Vector<float>(0, 0, 0);
+                        vt = new Vector3(0, 0, 0);
                     }
                 }
 
@@ -92,7 +94,7 @@ namespace Game.Objects.Types.Properties
 
                 if (_movementPhase == 1)                //acceleration phase
                 {
-                    if (Vector<float>.Magnitude(vt) < vmax)
+                    if (Vector3.Magnitude(vt) < vmax)
                     {
                         vt = vt + amax * Game.DeltaTime;        //accelerate
                         xt = xf - xt + vt * Game.DeltaTime;

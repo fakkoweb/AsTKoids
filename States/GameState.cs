@@ -82,12 +82,12 @@ namespace Game.States
       _skybox.Top = TextureManager.Get("SkyboxTop");
 
       _terrain = StaticModelManager.GetModel("Terrain");
-      _terrain.Scale = new Vector<float>(500, 20, 500);
+      _terrain.Scale = new Vector3(500, 20, 500);
       _terrain.Orientation = new Quaternion<float>(0, 0, 0, 0);
-      _terrain.Position = new Vector<float>(0, 0, 0);
+      _terrain.Position = new Vector3(0, 0, 0);
 
       _mushroomCloud = StaticModelManager.GetModel("MushroomCloud");
-      _mushroomCloud.Scale = new Vector<float>(500, 20, 500);
+      _mushroomCloud.Scale = new Vector3(500, 20, 500);
       _mushroomCloud.Orientation = new Quaternion<float>(0, 0, 0, 0);
       _mushroomCloud.Position.X = 0;
       _mushroomCloud.Position.Y = _terrain.Position.Y + 30;
@@ -96,14 +96,14 @@ namespace Game.States
       _bool = false;
 
       _mountain = StaticModelManager.GetModel("Mountain");
-      _mountain.Scale = new Vector<float>(5000, 5000, 5000);
+      _mountain.Scale = new Vector3(5000, 5000, 5000);
       _mountain.Orientation = new Quaternion<float>(0, 0, 0, 0);
-      _mountain.Position = new Vector<float>(4000, 0, 1000);
+      _mountain.Position = new Vector3(4000, 0, 1000);
 
       _mountain2 = StaticModelManager.GetModel("Mountain2");
-      _mountain2.Scale = new Vector<float>(3500, 3500, 3500);
+      _mountain2.Scale = new Vector3(3500, 3500, 3500);
       _mountain2.Orientation = new Quaternion<float>(0, 0, 0, 0);
-      _mountain2.Position = new Vector<float>(0, 0, 2500);
+      _mountain2.Position = new Vector3(0, 0, 2500);
 
       string[] colors = new string[] { "YellowRanger", "RedRanger", "BlueRanger", "BlackRanger", "PinkRanger" };
 
@@ -115,7 +115,7 @@ namespace Game.States
         _rangers[i].Position.X = -100;
         _rangers[i].Position.Y = _terrain.Position.Y + 10;
         _rangers[i].Position.Z = -i * 50;
-        _rangers[i].Scale = new Vector<float>(5, 5, 5);
+        _rangers[i].Scale = new Vector3(5, 5, 5);
         _rangers[i].Orientation = new Quaternion<float>(0, 1, 0, 0);
         _rangers[i].Orientation.W = i * 2;
         _rangers[i].Id = "Ranger" + i;
@@ -129,7 +129,7 @@ namespace Game.States
         _tuxes[i].Position.X = 100;
         _tuxes[i].Position.Y = _terrain.Position.Y + 10;
         _tuxes[i].Position.Z = i * 50;
-        _tuxes[i].Scale = new Vector<float>(25, 25, 25);
+        _tuxes[i].Scale = new Vector3(25, 25, 25);
         _tuxes[i].Orientation = new Quaternion<float>(0, 1, 0, 0);
         _tuxes[i].Orientation.W = i * 2;
         _tuxes[i].Id = "Tux" + i;

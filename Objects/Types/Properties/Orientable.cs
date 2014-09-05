@@ -31,42 +31,42 @@ namespace Game.Objects.Types.Properties
             _viewDistance = viewDistance;
         }
 
-        public virtual void FreeLookAt(Vector<float> targetAbsRef, Vector<float> upRelRef)
+        public virtual void FreeLookAt(Vector3 targetAbsRef, Vector3 upRelRef)
         {
 
-            //Vector v1 = new Vector<float>(0, 0, -1);
+            //Vector v1 = new Vector3(0, 0, -1);
             //Vector moveV = _staticModel.Position - vector;
             //Vector v2 = moveV.RotateBy(_staticModel.Orientation.W, 0, 1, 0);
 
             /*Vector forward = lookAt.Normalized();
             Vector right = Vector::Cross(up.Normalized(), forward);
             Vector up = Vector::Cross(forward, right);*/
-            Vector<float> forward ;
+            Vector3 forward ;
             if (_mainModel.IsChild)
             {
                 //Normalizing target and transforming it to local system
-                forward = Geometric.Quaternion_Rotate(_mainModel.ParentModel.Orientation.Inverted(), targetAbsRef.Normalize()) - _mainModel.ParentModel.Position;
+                forward = Geometric.Quaternion_Rotate(_mainModel.ParentModel.Orientation.Inverted(), targetAbsRef.Normalized()) - _mainModel.ParentModel.Position;
             }
             else
             {
                 //Normalizing target.. local system is the same as world system
-                forward = targetAbsRef.Normalize();
+                forward = targetAbsRef.Normalized();
             }
             //Normalizing upVector (we are assuming it is expressed in local system)
-            Vector<float> eye = _mainModel.PositionRelative.Normalize();
-            Vector<float> up = upRelRef.Normalize();
+            Vector3 eye = _mainModel.PositionRelative.Normalized();
+            Vector3 up = upRelRef.Normalized();
 
             //Insert manual imprecision to avoid singularity
-            if( Vector<float>.DotProduct(forward,up) == 1 )
+            if( Vector3.Dot(forward,up) == 1 )
             {
                 forward.X += 0.001f;
                 forward.Y += 0.001f;
                 forward.Z += 0.001f;
             }
 
-            //float angle = (float)Math.Acos( Vector<float>.DotProduct(current,targetAbsRef) );
-            //Vector<float> rotAxis = Vector<float>.CrossProduct(current, forward).Normalize();
-            //Vector<float> right = Vector<float>.CrossProduct(forward, up);
+            //float angle = (float)Math.Acos( Vector3.DotProduct(current,targetAbsRef) );
+            //Vector3 rotAxis = Vector3.CrossProduct(current, forward).Normalize();
+            //Vector3 right = Vector3.CrossProduct(forward, up);
 
             Matrix4 lookAt_result = Matrix4.LookAt( eye.X, eye.Y, eye.Z, forward.X, forward.Y, forward.Z, up.X, up.Y, up.Z );
             Matrix3 targetRelOrientation_matrix = new Matrix3(lookAt_result);
@@ -85,10 +85,10 @@ namespace Game.Objects.Types.Properties
 
         }
 
-        public virtual void ConstraintLookAt(Vector<float> targetAbsRef, Vector<float> upRelRef, Vector<float> constraintAxisSelect)
+        public virtual void ConstraintLookAt(Vector3 targetAbsRef, Vector3 upRelRef, Vector3 constraintAxisSelect)
         {
 
-            Vector<float> targetRelRef;
+            Vector3 targetRelRef;
 
             if (_mainModel.IsChild)
                 targetRelRef = Geometric.Quaternion_Rotate(_mainModel.ParentModel.Orientation.Inverted(), targetAbsRef);
@@ -102,39 +102,39 @@ namespace Game.Objects.Types.Properties
             else if (constraintAxisSelect.Z != 0)
                 targetRelRef.Z = 0;
 
-            //Vector v1 = new Vector<float>(0, 0, -1);
+            //Vector v1 = new Vector3(0, 0, -1);
             //Vector moveV = _staticModel.Position - vector;
             //Vector v2 = moveV.RotateBy(_staticModel.Orientation.W, 0, 1, 0);
 
             /*Vector forward = lookAt.Normalized();
             Vector right = Vector::Cross(up.Normalized(), forward);
             Vector up = Vector::Cross(forward, right);*/
-            Vector<float> forward;
+            Vector3 forward;
             if (_mainModel.IsChild)
             {
                 //Normalizing target and transforming it to local system
-                forward = targetRelRef.Normalize() - _mainModel.ParentModel.Position;
+                forward = targetRelRef.Normalized() - _mainModel.ParentModel.Position;
             }
             else
             {
                 //Normalizing target.. local system is the same as world system
-                forward = targetRelRef.Normalize();
+                forward = targetRelRef.Normalized();
             }
             //Normalizing upVector (we are assuming it is expressed in local system)
-            Vector<float> eye = _mainModel.PositionRelative.Normalize();
-            Vector<float> up = upRelRef.Normalize();
+            Vector3 eye = _mainModel.PositionRelative.Normalized();
+            Vector3 up = upRelRef.Normalized();
 
             //Insert manual imprecision to avoid singularity
-            if (Vector<float>.DotProduct(forward, up) == 1)
+            if (Vector3.Dot(forward, up) == 1)
             {
                 forward.X += 0.001f;
                 forward.Y += 0.001f;
                 forward.Z += 0.001f;
             }
 
-            //float angle = (float)Math.Acos( Vector<float>.DotProduct(current,targetAbsRef) );
-            //Vector<float> rotAxis = Vector<float>.CrossProduct(current, forward).Normalize();
-            //Vector<float> right = Vector<float>.CrossProduct(forward, up);
+            //float angle = (float)Math.Acos( Vector3.DotProduct(current,targetAbsRef) );
+            //Vector3 rotAxis = Vector3.CrossProduct(current, forward).Normalize();
+            //Vector3 right = Vector3.CrossProduct(forward, up);
 
             Matrix4 lookAt_result = Matrix4.LookAt(eye.X, eye.Y, eye.Z, forward.X, forward.Y, forward.Z, up.X, up.Y, up.Z);
             Matrix3 targetRelOrientation_matrix = new Matrix3(lookAt_result);

@@ -23,7 +23,7 @@ namespace Game.Units
     public float ViewDistance { get { return _viewDistance; } set { _viewDistance = value; } }
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public StaticModel StaticModel { get { return _staticModel; } set { _staticModel = value; } }
-    public Vector<float> Position { get { return _staticModel.Position; } set { _staticModel.Position = value; } }
+    public Vector3 Position { get { return _staticModel.Position; } set { _staticModel.Position = value; } }
     public virtual bool IsDead { get { return _isDead; } set { _isDead = value; } }
     
     public Unit(string id, StaticModel staticModel)
@@ -34,9 +34,9 @@ namespace Game.Units
     }
 
 
-    public void MoveTowards(Vector<float> vector) 
+    public void MoveTowards(Vector3 vector) 
     {
-      //Vector v1 = new Vector<float>(0, 0, -1);
+      //Vector v1 = new Vector3(0, 0, -1);
       //Vector moveV = _staticModel.Position - vector;
       //Vector v2 = moveV.RotateBy(_staticModel.Orientation.W, 0, 1, 0);
       _staticModel.Position.X += (vector.X / vector.Length()) * _moveSpeed;

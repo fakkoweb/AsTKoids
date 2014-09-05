@@ -80,7 +80,7 @@ namespace Game.States
             Vector3 sr = startRay.Xyz / startRay.W;
             Vector3 er = endRay.Xyz / endRay.W;
 
-            return new Ray(new Vector<float>(sr.X, sr.Y, sr.Z), new Vector<float>(er.X, er.Y, er.Z));
+            return new Ray(new Vector3(sr.X, sr.Y, sr.Z), new Vector3(er.X, er.Y, er.Z));
         }
 
         void UpdateCursorPosition()
@@ -112,13 +112,12 @@ namespace Game.States
             _field = new Plane(0, 1, 0, 0);
 
             _playerCursor = new Static("cursor","Tux");
-            _playerCursor.StaticModel.Scale=new Vector<float>(20, 20, 20);
+            _playerCursor.StaticModel.Scale=new Vector3(20, 20, 20);
             
 
             _skybox = new SkyBox();
-            _skybox.Scale.X = 10000;
-            _skybox.Scale.Y = 10000;
-            _skybox.Scale.Z = 10000;
+            _skybox.Scale = new Vector3(10000, 10000, 10000);
+
             _skybox.Left = TextureManager.Get("SkyboxLeft");
             _skybox.Right = TextureManager.Get("SkyboxRight");
             _skybox.Front = TextureManager.Get("SkyboxFront");
@@ -126,37 +125,41 @@ namespace Game.States
             _skybox.Top = TextureManager.Get("SkyboxTop");
             /*
             _terrain = StaticModelManager.GetModel("Terrain");
-            _terrain.Scale = new Vector<float>(500, 20, 500);
+            _terrain.Scale = new Vector3(500, 20, 500);
             _terrain.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
-            _terrain.Position = new Vector<float>(0, 0, 0);
+            _terrain.Position = new Vector3(0, 0, 0);
             */
             _mountain = StaticModelManager.GetModel("Mountain");
-            _mountain.Scale = new Vector<float>(5000, 5000, 5000);
+            _mountain.Scale = new Vector3(5000, 5000, 5000);
             _mountain.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
-            _mountain.Position = new Vector<float>(4000, 0, 1000);
+            _mountain.Position = new Vector3(4000, 0, 1000);
 
             //_mountain2 = StaticModelManager.GetModel("Mountain2");
-            //_mountain2.Scale = new Vector<float>(3500, 3500, 3500);
+            //_mountain2.Scale = new Vector3(3500, 3500, 3500);
             //_mountain2.Orientation = new Quaternion(0, 0, 0, 0);
-            //_mountain2.Position = new Vector<float>(0, 0, 2500);
+            //_mountain2.Position = new Vector3(0, 0, 2500);
             
             _dreadnaught = new Dreadnaught("player");
-            _dreadnaught.StaticModel.Position = new Vector<float>(0, 0, 0);
+            _dreadnaught.StaticModel.Position = new Vector3(0, -100, 0);
             _dreadnaught.StaticModel.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
-            _dreadnaught.StaticModel.Scale = new Vector<float>(20, 20, 20);
-            
+            _dreadnaught.StaticModel.Scale = new Vector3(10, 10, 10);
+            foreach (StaticModel childModel in _dreadnaught.StaticModel.ChildrenModels)
+            {
+                childModel.Scale = new Vector3(20, 20, 20);
+            }
+            /*
             _cannon = new SmallCannon("cannon_base");
-            _cannon.StaticModel.Position = new Vector<float>(10, 10, 10);
+            _cannon.StaticModel.Position = new Vector3(10, 10, 10);
             _cannon.StaticModel.Orientation = Geometric.Generate_Quaternion(-Constants.pi_float/4, 0, 0, 1);
-            _cannon.StaticModel.Scale = new Vector<float>(20, 20, 20);
-            
+            _cannon.StaticModel.Scale = new Vector3(20, 20, 20);
+            */
             /*
             _cannon2 = new SmallCannon("cannon");
-            _cannon2.StaticModel.Position = new Vector<float>(0, 0, 0);
+            _cannon2.StaticModel.Position = new Vector3(0, 0, 0);
             //_cannon2.StaticModel.Orientation = new Quaternion(0,0,0,1);
             //_cannon2.StaticModel.Orientation = new Quaternion((float)Math.Sin(-Constants.pi_double / 8), 0, 0, (float)Math.Cos(-Constants.pi_double / 8));
             _cannon2.StaticModel.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
-            _cannon2.StaticModel.Scale = new Vector<float>(20, 20, 20);
+            _cannon2.StaticModel.Scale = new Vector3(20, 20, 20);
             */
             //_cannon.StaticModel.addChildren(_cannon2.StaticModel);
 
@@ -171,7 +174,7 @@ namespace Game.States
         }
 
 
-        public static Comparison Compare(Link<Vector<float>, Vector<float>, Color> left, Link<Vector<float>, Vector<float>, Color> right)
+        public static Comparison Compare(Link<Vector3, Vector3, Color> left, Link<Vector3, Vector3, Color> right)
         {
             // this is a terrible hack... dont do this
             if (left.One == right.One && left.Two == right.Two)
@@ -206,8 +209,8 @@ namespace Game.States
             Renderer.DrawStaticModel(_mountain);
             // Renderer.DrawStaticModel(_mountain2);
 
-            //Renderer.DrawStaticModel(_dreadnaught.StaticModel);
-            Renderer.DrawStaticModel(_cannon.StaticModel);
+            Renderer.DrawStaticModel(_dreadnaught.StaticModel);
+            //Renderer.DrawStaticModel(_cannon.StaticModel);
             //Renderer.DrawStaticModel(_cannon2.StaticModel);
             Renderer.DrawStaticModel(_playerCursor.StaticModel);
 
@@ -240,34 +243,32 @@ namespace Game.States
         public string Update(float elapsedTime)
         {
             CameraControls();
-            _skybox.Position.X = _camera.Position.X;
-            _skybox.Position.Y = _camera.Position.Y;
-            _skybox.Position.Z = _camera.Position.Z;
+            _skybox.Position = new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z);
 
 
             /*
             if (InputManager.Keyboard.Gdown)
             {
-                _cannon.Position = new Vector<float>(500, 500, 500);
+                _cannon.Position = new Vector3(500, 500, 500);
 
-                //_cannon.LookAt(new Vector<float>(50, 50, 50));
-                //_cannon2.LookAt(new Vector<float>(0, 1000, 0));
+                //_cannon.LookAt(new Vector3(50, 50, 50));
+                //_cannon2.LookAt(new Vector3(0, 1000, 0));
             }
-            //_cannon.LookAt(new Vector<float>(0, 1000, 0));  
+            //_cannon.LookAt(new Vector3(0, 1000, 0));  
             //angle = angle - Constants.pi_float/ 64;
             else
             {
-                _cannon.Position = new Vector<float>(-350, 500, -350);
-                //_cannon.LookAt(new Vector<float>(-35, 50, -35));
-                //_cannon2.LookAt(new Vector<float>(0, 1000, 0));  
+                _cannon.Position = new Vector3(-350, 500, -350);
+                //_cannon.LookAt(new Vector3(-35, 50, -35));
+                //_cannon2.LookAt(new Vector3(0, 1000, 0));  
                 }
-                //_cannon.LookAt(new Vector<float>(-50, -50, -50));
+                //_cannon.LookAt(new Vector3(-50, -50, -50));
                 //angle = angle + Constants.pi_float / 64;
 
              */
 
-            _cannon.LookAt(_playerCursor.Position);
-            _dreadnaught.LookAt(_cannon.Position);
+            //_cannon.LookAt(_playerCursor.Position);
+            _dreadnaught.AimAt(_playerCursor.Position);
             //_cannon.StaticModel.OrientationRelative = Quaternion.Slerp(_cannon.StaticModel.OrientationRelative, Geometric.Generate_Quaternion(angle, 0, 1, 0), Game.DeltaTime * 0.001f);
             //_cannon.Orientation = Geometric.Generate_Quaternion(angle, 0, 1, 0);
 

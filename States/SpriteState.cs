@@ -39,9 +39,9 @@ namespace Game.States
       _camera.Move(_camera.Backward, 300);
 
       _terrain = StaticModelManager.GetModel("Terrain");
-      _terrain.Scale = new Vector<float>(500, 20, 500);
-      //_terrain.RotationAmmounts = new Vector<float>(0, 0, 0);
-      _terrain.Position = new Vector<float>(0, 0, 0);
+      _terrain.Scale = new Vector3(500, 20, 500);
+      //_terrain.RotationAmmounts = new Vector3(0, 0, 0);
+      _terrain.Position = new Vector3(0, 0, 0);
 
       _sprites = new Sprite(TextureManager.Get("Menu"));
       _sprites.Scale.X = 50;

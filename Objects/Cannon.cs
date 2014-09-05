@@ -16,14 +16,14 @@ namespace Game.Objects
     {
 
 
-        protected Vector<float> _bulletHole;
-        protected Vector<float> _bulletVector;
+        protected Vector3 _bulletHole;
+        protected Vector3 _bulletVector;
 
-        public virtual Vector<float> BulletHole
+        public virtual Vector3 BulletHole
         {         
             get
             {// TODO
-                Vector<float> result;
+                Vector3 result;
                 if (_mainModel.IsChild)
                 {
                     result = _mainModel.Position + (Geometric.Quaternion_Rotate(_mainModel.Orientation, _bulletHole));
@@ -42,11 +42,11 @@ namespace Game.Objects
                     _bulletHole = value;
             }
         }
-        public virtual Vector<float> BulletVector
+        public virtual Vector3 BulletVector
         {
             get
             {// TODO
-                Vector<float> result;
+                Vector3 result;
                 if (_mainModel.IsChild)
                 {
                     result = Geometric.Quaternion_Rotate(_mainModel.Orientation, _bulletVector);
@@ -69,25 +69,25 @@ namespace Game.Objects
         public Cannon(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance, int health)
             : base(id, staticModel, maxRotSpeed, viewDistance, health)
         {
-            _bulletHole = new Vector<float>(0, 0, 0);
-            _bulletVector = new Vector<float>(0, 0, 0);
+            _bulletHole = new Vector3(0, 0, 0);
+            _bulletVector = new Vector3(0, 0, 0);
         }
 
         public Cannon(string id, string staticModel, float maxRotSpeed, float viewDistance, int health)
             : base(id, staticModel, maxRotSpeed, viewDistance, health)
         {
-            _bulletHole = new Vector<float>(0, 0, 0);
-            _bulletVector = new Vector<float>(0, 0, 0);
+            _bulletHole = new Vector3(0, 0, 0);
+            _bulletVector = new Vector3(0, 0, 0);
         }
 
-        public Cannon(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance, int health, Vector<float> bulletHole, Vector<float> bulletVector)
+        public Cannon(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance, int health, Vector3 bulletHole, Vector3 bulletVector)
             : base(id, staticModel, maxRotSpeed, viewDistance, health)
         {
             _bulletHole = bulletHole;
             _bulletVector = bulletVector;
         }
 
-        public Cannon(string id, string staticModel, float maxRotSpeed, float viewDistance, int health, Vector<float> bulletHole, Vector<float> bulletVector)
+        public Cannon(string id, string staticModel, float maxRotSpeed, float viewDistance, int health, Vector3 bulletHole, Vector3 bulletVector)
             : base(id, staticModel, maxRotSpeed, viewDistance, health)
         {
             _bulletHole = bulletHole;

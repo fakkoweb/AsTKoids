@@ -17,7 +17,7 @@ namespace Game.Objects.Types.Properties
 
         public string Id { get { return _id; } set { _id = value; } }
         public StaticModel StaticModel { get { return _mainModel; } set { _mainModel = value; } }
-        public Vector<float> Position { get { return _mainModel.Position; } set { _mainModel.Position = value; } }
+        public Vector3 Position { get { return _mainModel.Position; } set { _mainModel.Position = value; } }
         public Quaternion Orientation { get { return _mainModel.Orientation; } set { _mainModel.Orientation = value; } }
 
         public Static(string id, StaticModel staticModel)

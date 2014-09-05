@@ -73,10 +73,10 @@ namespace Game.Units
         // Attacking
         else if (Logic.Abs((Position - _target.Position).LengthSquared()) < _attackRangedSquared)
         {
-          Link<Vector<float>, Vector<float>, Color> link =
-            new Link<Vector<float>, Vector<float>, Color>(
-              new Vector<float>(Position.X, Position.Y, Position.Z),
-              new Vector<float>(_target.Position.X, _target.Position.Y, _target.Position.Z),
+          Link<Vector3, Vector3, Color> link =
+            new Link<Vector3, Vector3, Color>(
+              new Vector3(Position.X, Position.Y, Position.Z),
+              new Vector3(_target.Position.X, _target.Position.Y, _target.Position.Z),
               Color.Red);
 
           if (!attack && !AiBattle.lines.Contains(link, AiBattle.Compare))
