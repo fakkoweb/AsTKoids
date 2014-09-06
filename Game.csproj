@@ -38,10 +38,12 @@
   <ItemGroup>
     <Compile Include="Game.cs" />
     <Compile Include="Objects\BigCannon.cs" />
+    <Compile Include="Objects\Bullet.cs" />
     <Compile Include="Objects\Cannon.cs" />
     <Compile Include="Objects\Dreadnaught.cs" />
     <Compile Include="Objects\Drone.cs" />
     <Compile Include="Objects\SmallCannon.cs" />
+    <Compile Include="Objects\Asteroid.cs" />
     <Compile Include="Objects\Types\Properties\Movable.cs" />
     <Compile Include="Objects\Types\Properties\Damageable.cs" />
     <Compile Include="Objects\Types\Properties\Orientable.cs" />

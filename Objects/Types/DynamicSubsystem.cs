@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types
 {
-    class DynamicSubsystem : Orientable, Damageable
+    public class DynamicSubsystem : Orientable, Damageable
     {
         protected int _health;
         protected int _damage;

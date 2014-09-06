@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types
 {
-    class StaticSubsystem : Static, Damageable
+    public class StaticSubsystem : Static, Damageable
     {
         protected int _health;
         protected int _damage;

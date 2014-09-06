@@ -124,7 +124,7 @@ namespace Game.States
       _powerRangerCount = _rangedCount + _meleeCount + _kamakaziCount;
       _tuxCount = _rangedCount + _meleeCount + _kamakaziCount;
 
-      _octree =
+      _octree = 
         new Omnitree_Array<Unit, double>(
           new double[] { -100000, -100000, -100000 },
           new double[] { 100000, 100000, 100000 },

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types.Properties
 {
-    interface Damageable
+    public interface Damageable
     {
         int Health { get; set; }
         int Damage { get; set; }

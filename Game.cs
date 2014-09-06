@@ -29,7 +29,7 @@ namespace Game
       //GraphicsSettingsManager.Fullscreen = true;
       GraphicsSettingsManager.BackFaceCulling = true;
       GraphicsSettingsManager.DepthBuffer = true;
-      GraphicsSettingsManager.VerticalSyncronization = true;
+      GraphicsSettingsManager.VerticalSyncronization = false;
       GraphicsSettingsManager.ClearColor = Color.DEFAULT;
       GraphicsSettingsManager.Texture2D = true;
       GraphicsSettingsManager.Blend = true;
@@ -55,6 +55,8 @@ namespace Game
         // TextureManager.LoadTexture("nameOfTexture", "filePath");
       // NOTE: If you use my static "FilePath" class the directory should be cross platform
 
+      
+
       // Textures for models
       TextureManager.LoadTexture("grass", FilePath.FromRelative(@"\..\..\Assets\Textures\grass.bmp"));
       TextureManager.LoadTexture("rock", FilePath.FromRelative(@"\..\..\Assets\Textures\rock3.bmp"));
@@ -69,9 +71,13 @@ namespace Game
       TextureManager.LoadTexture("YellowRanger", FilePath.FromRelative(@"\..\..\Assets\Textures\YellowRangerBody.bmp"));
       TextureManager.LoadTexture("MushroomCloud", FilePath.FromRelative(@"\..\..\Assets\Textures\MushCloud.bmp"));
 
+      TextureManager.LoadTexture("Planet_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Planet_texture.bmp"));
       TextureManager.LoadTexture("Dreadnaught_front_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Dreadnaught_front_texture.bmp"));
+      TextureManager.LoadTexture("Dreadnaught_back_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Dreadnaught_back_texture.bmp"));
+      TextureManager.LoadTexture("Dreadnaught_ring_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Dreadnaught_ring_texture.bmp"));
       TextureManager.LoadTexture("Cannon_small_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Cannon_small_texture.bmp"));
       TextureManager.LoadTexture("Cannon_small_base_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Cannon_small_base_texture.bmp"));
+      TextureManager.LoadTexture("Asteroid_texture", FilePath.FromRelative(@"\..\..\Assets\Textures\Asteroid_texture.bmp"));
 
       // Textures for menus
       TextureManager.LoadTexture("Menu", FilePath.FromRelative(@"\..\..\Assets\Textures\Menu.bmp"));
@@ -82,6 +88,7 @@ namespace Game
       TextureManager.LoadTexture("SkyboxFront", FilePath.FromRelative(@"\..\..\Assets\Textures\SkyBoxes\NightWalker\NightWalkerFront.bmp"));
       TextureManager.LoadTexture("SkyboxBack", FilePath.FromRelative(@"\..\..\Assets\Textures\SkyBoxes\NightWalker\NightWalkerBack.bmp"));
       TextureManager.LoadTexture("SkyboxTop", FilePath.FromRelative(@"\..\..\Assets\Textures\SkyBoxes\NightWalker\NightWalkerTop.bmp"));
+      TextureManager.LoadTexture("SkyboxBottom", FilePath.FromRelative(@"\..\..\Assets\Textures\SkyBoxes\NightWalker\NightWalkerTop.bmp"));
     }
 
     public override void InitializeFonts()
@@ -116,7 +123,7 @@ namespace Game
       // Loading the meshes
       // Meshes are parts of a static model that have the same texture. You cannot render static 
       //   meshes because they do not have transformations. Put them in a static model to render them.
-      StaticModelManager.LoadMesh("terrain", FilePath.FromRelative(@"\..\..\Assets\Models\Terrain.obj"));
+      //StaticModelManager.LoadMesh("terrain", FilePath.FromRelative(@"\..\..\Assets\Models\Terrain.obj"));
       StaticModelManager.LoadMesh("RedRanger", FilePath.FromRelative(@"\..\..\Assets\Models\RedRanger.obj"));
       StaticModelManager.LoadMesh("BlackRanger", FilePath.FromRelative(@"\..\..\Assets\Models\RedRanger.obj"));
       StaticModelManager.LoadMesh("BlueRanger", FilePath.FromRelative(@"\..\..\Assets\Models\RedRanger.obj"));
@@ -128,14 +135,18 @@ namespace Game
       StaticModelManager.LoadMesh("mountain", FilePath.FromRelative(@"\..\..\Assets\Models\mountain.obj"));
       StaticModelManager.LoadMesh("MushroomCloud", FilePath.FromRelative(@"\..\..\Assets\Models\MushCloud.obj"));
 
+      StaticModelManager.LoadMesh("Planet_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Planet_mesh.obj"));
       StaticModelManager.LoadMesh("Dreadnaught_front_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Dreadnaught_front_mesh.obj"));
+      StaticModelManager.LoadMesh("Dreadnaught_back_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Dreadnaught_back_mesh.obj"));
+      StaticModelManager.LoadMesh("Dreadnaught_ring_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Dreadnaught_ring_mesh.obj"));
       StaticModelManager.LoadMesh("Cannon_small_base_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Cannon_small_base_mesh.obj"));
       StaticModelManager.LoadMesh("Cannon_small_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Cannon_small_mesh.obj"));
+      StaticModelManager.LoadMesh("Asteroid_mesh", FilePath.FromRelative(@"\..\..\Assets\Models\Asteroid_mesh.obj"));
 
       // Forming the static models out of the meshes and textures
       // Static models represent a collection of static meshes that all have the same transformational values.
       StaticModelManager.LoadModel("MushroomCloud", new string[] { "MushroomCloud" }, new string[] { "MushroomCloud" }, new string[] { "MushroomCloud" });
-      StaticModelManager.LoadModel("Terrain", new string[] { "Terrain" }, new string[] { "terrain" }, new string[] { "grass" });
+      
       StaticModelManager.LoadModel("Mountain", new string[] { "mountain" }, new string[] { "mountain" }, new string[] { "rock" });
       StaticModelManager.LoadModel("Mountain2", new string[] { "mountain" }, new string[] { "mountain" }, new string[] { "rock2" });
 
@@ -152,9 +163,14 @@ namespace Game
       StaticModelManager.LoadMesh("Dodecahedron", FilePath.FromRelative(@"\..\..\Assets\Models\Dodecahedron.obj"));
       StaticModelManager.LoadModel("Dodecahedron", new string[] { "Body" }, new string[] { "Dodecahedron" }, new string[] { "rock2" });
 
+      StaticModelManager.LoadModel("Planet_model", new string[] { "Planet" }, new string[] { "Planet_mesh" }, new string[] { "Planet_texture" });
       StaticModelManager.LoadModel("Dreadnaught_front_model", new string[] { "Body" }, new string[] { "Dreadnaught_front_mesh" }, new string[] { "Dreadnaught_front_texture" });
+      StaticModelManager.LoadModel("Dreadnaught_back_model", new string[] { "Body" }, new string[] { "Dreadnaught_back_mesh" }, new string[] { "Dreadnaught_back_texture" });
+      StaticModelManager.LoadModel("Dreadnaught_ring_model", new string[] { "Body" }, new string[] { "Dreadnaught_ring_mesh" }, new string[] { "Dreadnaught_ring_texture" });
       StaticModelManager.LoadModel("Cannon_small_model", new string[] { "Body" }, new string[] { "Cannon_small_mesh" }, new string[] { "Cannon_small_texture" });
       StaticModelManager.LoadModel("Cannon_small_base_model", new string[] { "Body" }, new string[] { "Cannon_small_base_mesh" }, new string[] { "Cannon_small_base_texture" });
+      StaticModelManager.LoadModel("Asteroid_model", new string[] { "Body" }, new string[] { "Asteroid_mesh" }, new string[] { "Asteroid_texture" });
+    
     }
 
     public override void InitializeShaders()

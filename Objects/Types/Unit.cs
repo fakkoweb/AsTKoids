@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types
 {
-    class Unit : Movable, Damageable
+    public class Unit : Movable, Damageable
     {
         protected int _health;
         protected int _damage;

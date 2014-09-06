@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types.Properties
 {
-    class Movable : Orientable
+    public class Movable : Orientable
     {
         protected float _maxSpeed;
         protected Vector3 _velocity;
         protected float _maxAcceleration;
 
-        public float Speed { get { return _velocity.Length; } }
-        public Vector3 Velocity { get { return _velocity; } }
+        public float Speed { get { return _maxSpeed; } }
+        public float Acceleration { get { return _maxAcceleration; } }
+        public Vector3 Velocity { get { return _velocity; } set { _velocity = value; } }
 
         public Movable(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance, float maxSpeed, float maxAcceleration)
             : base(id, staticModel, maxRotSpeed, viewDistance)

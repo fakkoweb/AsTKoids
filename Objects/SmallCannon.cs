@@ -12,58 +12,10 @@ namespace Game.Objects
 {
     class SmallCannon : Cannon
     {
-        StaticModel _cannonTubes;
-
-        //Must transform bullet origin with _cannonTubes transform also!
-        public override Vector3 BulletHole
-        {
-            get
-            {// TODO
-                Vector3 result;
-                if (_mainModel.IsChild)
-                {
-                    result = _mainModel.Position + (Geometric.Quaternion_Rotate(_mainModel.Orientation, _bulletHole));
-                    return result;
-                }
-                else
-                    return _bulletHole;
-            }
-            set
-            {
-                if (_mainModel.IsChild)
-                {
-                    _bulletHole = (Geometric.Quaternion_Rotate(_mainModel.Orientation, value)) - _mainModel.Position;
-                }
-                else
-                    _bulletHole = value;
-            }
-        }
-        public override Vector3 BulletVector
-        {
-            get
-            {// TODO
-                Vector3 result;
-                if (_mainModel.IsChild)
-                {
-                    result = Geometric.Quaternion_Rotate(_mainModel.Orientation, _bulletVector);
-                    return result;
-                }
-                else
-                    return _bulletVector;
-            }
-            set
-            {
-                if (_mainModel.IsChild)
-                {
-                    _bulletHole = (Geometric.Quaternion_Rotate(_mainModel.Orientation, value)) - _mainModel.Position;
-                }
-                else
-                    _bulletHole = value;
-            }
-        }
+        //StaticModel _cannonTubes;
 
         public SmallCannon(string id)
-            : base(id, "Cannon_small_model", 20, 8000, 1000, new Vector3(0,0,0), new Vector3(0,0,0))
+            : base(id, "Cannon_small_model", 2f, 8000, 1000, new Vector3(0,0,0), new Vector3(0,0,0.4f))
         {
 
             //TODO set bullet vectors properly
@@ -149,6 +101,7 @@ namespace Game.Objects
 
             //TODO: update bullethole and bullet vector
         }
+
 
     }
 }

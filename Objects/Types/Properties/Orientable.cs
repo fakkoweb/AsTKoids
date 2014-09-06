@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types.Properties
 {
-    class Orientable : Static
+    public class Orientable : Static
     {
         protected float _maxRotSpeed;
         protected float _viewDistance;
 
-        public float MoveSpeed { get { return _maxRotSpeed; } set { _maxRotSpeed = value; } }
+        public float RotSpeed { get { return _maxRotSpeed; } set { _maxRotSpeed = value; } }
         public float ViewDistance { get { return _viewDistance; } set { _viewDistance = value; } }
 
         public Orientable(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance) : base(id, staticModel)

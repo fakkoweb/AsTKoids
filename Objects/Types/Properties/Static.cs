@@ -10,15 +10,18 @@ using System.Threading.Tasks;
 
 namespace Game.Objects.Types.Properties
 {
-    class Static
+    public class Static
     {
         protected string _id;
         protected StaticModel _mainModel;
 
         public string Id { get { return _id; } set { _id = value; } }
         public StaticModel StaticModel { get { return _mainModel; } set { _mainModel = value; } }
-        public Vector3 Position { get { return _mainModel.Position; } set { _mainModel.Position = value; } }
-        public Quaternion Orientation { get { return _mainModel.Orientation; } set { _mainModel.Orientation = value; } }
+        public virtual Vector3 Position { get { return _mainModel.Position; } set { _mainModel.Position = value; } }
+        public virtual Quaternion Orientation { get { return _mainModel.Orientation; } set { _mainModel.Orientation = value; } }
+        public virtual Vector3 PositionRelative { get { return _mainModel.PositionRelative; } set { _mainModel.PositionRelative = value; } }
+        public virtual Quaternion OrientationRelative { get { return _mainModel.OrientationRelative; } set { _mainModel.OrientationRelative = value; } }
+        public virtual Vector3 Scale { get { return _mainModel.Scale; } set { _mainModel.Scale = value; } }
 
         public Static(string id, StaticModel staticModel)
         {

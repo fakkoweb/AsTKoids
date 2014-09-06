@@ -8,7 +8,7 @@ namespace Game
     static void Main()
     {
       // you can select the starting window size here
-      using (Game game = new Game(800, 600)) { game.Run(); }
+      using (Game game = new Game(1280, 800)) { game.Run(); }
     }
   }
 }
