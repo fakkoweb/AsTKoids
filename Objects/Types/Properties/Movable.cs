@@ -15,8 +15,8 @@ namespace Game.Objects.Types.Properties
         protected Vector3 _velocity;
         protected float _maxAcceleration;
 
-        public float Speed { get { return _maxSpeed; } }
-        public float Acceleration { get { return _maxAcceleration; } }
+        public float MaxSpeed { get { return _maxSpeed; } }
+        public float MaxAcceleration { get { return _maxAcceleration; } }
         public Vector3 Velocity { get { return _velocity; } set { _velocity = value; } }
 
         public Movable(string id, StaticModel staticModel, float maxRotSpeed, float viewDistance, float maxSpeed, float maxAcceleration)
@@ -34,6 +34,8 @@ namespace Game.Objects.Types.Properties
             _maxAcceleration = maxAcceleration;
             _velocity = new Vector3(0, 0, 0);
         }
+
+        /* EXPERIMENTAL CODE - automatic moving for AI
 
         public void MoveTowards(Vector3 target)
         {
@@ -144,8 +146,9 @@ namespace Game.Objects.Types.Properties
 
             }
 
-            */
+            
 
         }
+         */ 
     }
 }

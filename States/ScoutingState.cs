@@ -55,6 +55,7 @@ namespace Game.States
         ulong _total_spawned_asteroids = 0;
         int _num_asteroids_on_screen = 0;
         const int _max_asteroids_on_screen = 50;
+        float _min_spawning_time = 15;
         Vector3[] _spawnpoints;
         float[] _spawnpoint_angles;
         float[] _spawnpoint_times;
@@ -235,9 +236,13 @@ namespace Game.States
 
         public string Update(float elapsedTime)
         {
+            ScrollPlanet();
+            
             CameraControls();
 
             DreadnaughtControls();
+
+
 
             //_dreadnaught.LookAt(_playerCursor.Position);
             _dreadnaught.AimAt(_playerCursor.Position);
@@ -247,7 +252,7 @@ namespace Game.States
 
             Physics();
 
-            Output.WriteLine(_playerCursor.Position + "x");
+            //Output.WriteLine(_playerCursor.Position + "x");
             /*
             if (InputManager.Keyboard.Gdown)
             {
@@ -276,7 +281,7 @@ namespace Game.States
 
             if (InputManager.Mouse.LeftClickdown)
             {
-                List<Bullet> incoming = _dreadnaught.Shoot();
+                List<Bullet> incoming = _dreadnaught.Shoot(_playerCursor.Position);
                 if (incoming.Count > 0) foreach (Bullet bullet in incoming) _bullets.Add(bullet);
             }
 
@@ -362,12 +367,34 @@ namespace Game.States
 
         private void DreadnaughtControls()
         {
+            bool commandsEnabled = false;
+            Vector3 command = new Vector3(0, 0, 0);
+            Vector3 repelForce = new Vector3(0, 0, 0);
 
-            Vector3 command = new Vector3(0,0,0);
 
-            if (!IsOutOfBounds(_dreadnaught.Position))   //if dreadnaught is out of bounds, disable controls (no more acceleration input)
+            if (!IsOutOfBounds(_dreadnaught.Position))   //if dreadnaught is in bounds, enable controls (player can accelerate spaceship)
             {
-                // Dreadnaught position movement
+                commandsEnabled = true;
+            }
+            else
+            {
+                //If out of bounds, disable controls and apply a small "force" towards the origin, until spaceship changes direction
+                if (Vector3.Dot(_dreadnaught.Velocity, _dreadnaught.Position) > 0)
+                {
+                    commandsEnabled = false;
+                    repelForce = new Vector3(-_dreadnaught.Position.X, 0, -_dreadnaught.Position.Z);
+                    repelForce.NormalizeFast();
+                }//If out of bounds but spaceship has changed direction, enable commands (to allow player to get back)
+                else
+                {
+                    commandsEnabled = true;
+                }
+            }
+
+
+            // Dreadnaught position movement
+            if (commandsEnabled)
+            {
                 if (InputManager.Keyboard.Sdown)
                     if (InputManager.Keyboard.ShiftLeftdown)
                         _camera.Move(_camera.Down, _camera.PositionSpeed * 100);
@@ -392,17 +419,15 @@ namespace Game.States
                     else
                         command.X -= 1;
             }
-            else
-            {
-                //If out of bounds apply a small "force" towards the origin
-                Vector3 repelForce = new Vector3(-_dreadnaught.Position.X, 0, -_dreadnaught.Position.Z);
-                repelForce.NormalizeFast();
-                command = new Vector3(repelForce.X*0.5f, 0, repelForce.Z*0.5f);
-            }
+
+            command.NormalizeFast();
+            command += repelForce;      //add repelforce (if any)
+            Vector3 nextVelocity = _dreadnaught.Velocity + (command * _dreadnaught.MaxAcceleration * Game.DeltaTime);
+            if (Math.Abs(nextVelocity.X) > _dreadnaught.MaxSpeed) nextVelocity.X = _dreadnaught.Velocity.X;
+            if (Math.Abs(nextVelocity.Z) > _dreadnaught.MaxSpeed) nextVelocity.Z = _dreadnaught.Velocity.Z;
             
-            Vector3 nextVelocity = _dreadnaught.Velocity + (command * _dreadnaught.Acceleration * Game.DeltaTime);
-            if (nextVelocity.LengthFast < _dreadnaught.Speed)
-                _dreadnaught.Velocity = nextVelocity;
+            //Movement apply
+            _dreadnaught.Velocity = nextVelocity;
             _dreadnaught.Position = _dreadnaught.Position + _dreadnaught.Velocity;
 
  
@@ -497,10 +522,15 @@ namespace Game.States
                     _asteroids.Add(_spawning);
                     _num_asteroids_on_screen++;
                     _total_spawned_asteroids++;
-                    Output.WriteLine("spawned:" + _total_spawned_asteroids + "from: " + _selectedSpawnPoint);
-                    _spawnpoint_times[_selectedSpawnPoint] = 15;    //ten seconds for each new spawnpoint
+                    //Output.WriteLine("spawned:" + _total_spawned_asteroids + "from: " + _selectedSpawnPoint);
+                    _spawnpoint_times[_selectedSpawnPoint] = _min_spawning_time;
                 }
             }
+
+        }
+
+        private void ScrollPlanet()
+        {
 
         }
 

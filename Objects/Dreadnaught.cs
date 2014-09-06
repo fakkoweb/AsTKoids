@@ -196,7 +196,7 @@ namespace Game.Objects
         }
 
         
-        public List<Bullet> Shoot()
+        public List<Bullet> Shoot(Vector3 targetRef)        //target is used to determine which cannon will fire!
         {
             List<Bullet> bulletsShot = new List<Bullet>();
             foreach (SmallCannon cannon in _frontCannons)
