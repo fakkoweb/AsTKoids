@@ -37,6 +37,9 @@ namespace Game.States
         Plane _cursorField;
         Vector3 _spaceLimit;        //maximum absolute values for deleting physics objects out of a certain range
         Vector3 _playerLimit;       //maximum absolute values for the player to go
+        float _playerLimitRange;    //maximum range around the origin reachable by dreadnaught
+        float _playerLimitEccentricityX;    //Deform quantity of the range along x axis
+        float _playerLimitEccentricityZ;    //Deform quantity of the range along z axis
         Static _playerCursor;
 
         Camera _camera;
@@ -55,7 +58,7 @@ namespace Game.States
         ulong _total_spawned_asteroids = 0;
         int _num_asteroids_on_screen = 0;
         const int _max_asteroids_on_screen = 50;
-        float _min_spawning_time = 15;
+        float _min_spawning_delay = 15;
         Vector3[] _spawnpoints;
         float[] _spawnpoint_angles;
         float[] _spawnpoint_times;
@@ -90,7 +93,10 @@ namespace Game.States
 
             _cursorField = new Plane(0, 1, 0, 0);
             _spaceLimit = new Vector3(8000, 2000, 6000);    //Y is important since some debris could escape that way
-            _playerLimit = new Vector3(3800, 1000, 2100);   //Y is not important since player cannot move there
+            _playerLimit = new Vector3(2000, 1000, 1400);   //Y is not important since player cannot move there
+            _playerLimitRange = 1500;
+            _playerLimitEccentricityX = 500;                //0 is a perfect circle, negative is reducing, positive is extending along X axis
+            _playerLimitEccentricityZ = -500;                  //0 is a perfect circle, negative is reducing, positive is extending along Z axis
 
             _asteroids = new List<Asteroid>();
             _bullets = new List<Bullet>();
@@ -132,7 +138,7 @@ namespace Game.States
             _playerCursor.StaticModel.Scale=new Vector3(10, 10, 10);
             
             _skybox = new SkyBox();
-            _skybox.Scale = new Vector3(10000, 10000, 10000);
+            _skybox.Scale = new Vector3(20000, 20000, 20000);
 
             _skybox.Left = TextureManager.Get("SkyboxLeft");
             _skybox.Right = TextureManager.Get("SkyboxRight");
@@ -142,7 +148,7 @@ namespace Game.States
             _skybox.Bottom = TextureManager.Get("SkyboxBottom");
 
             _terrain = StaticModelManager.GetModel("Planet_model");
-            _terrain.Scale = new Vector3(500, 1, 500);
+            _terrain.Scale = new Vector3(20000, 1, 20000);
             _terrain.Orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
             _terrain.Position = new Vector3(0, -1000, 0);
             
@@ -491,8 +497,11 @@ namespace Game.States
 
         public bool IsOutOfBounds(Vector3 obj)
         {
-            Vector3 abs = new Vector3(Math.Abs(obj.X), Math.Abs(obj.Y), Math.Abs(obj.Z));
-            if (abs.X > _playerLimit.X || abs.Y > _playerLimit.Y || abs.Z > _playerLimit.Z)
+            Vector3 normalized = new Vector3(obj.X, obj.Y, obj.Z);
+            normalized.NormalizeFast();
+            float norm = obj.LengthFast;
+            //Vector3 abs = new Vector3(Math.Abs(obj.X), Math.Abs(obj.Y), Math.Abs(obj.Z));
+            if (norm > _playerLimitRange )//- Math.Abs(normalized.Z*500))//+ normalized.X * _playerLimitEccentricityX + normalized.Z * _playerLimitEccentricityZ)
                 return true;
             else
                 return false;
@@ -501,7 +510,9 @@ namespace Game.States
         private void SpawnAsteroids()
         {
             Random random = new Random();
-            Asteroid _spawning;
+            Asteroid spawning;
+            float speedMultiplier;
+
             for (int i = 0; i < 5; i++) _spawnpoint_times[i] -= Game.DeltaTime * 0.001f;
 
             if (_num_asteroids_on_screen < _max_asteroids_on_screen)
@@ -509,21 +520,43 @@ namespace Game.States
                 int _selectedSpawnPoint = random.Next(0, 5);
                 if (_spawnpoint_times[_selectedSpawnPoint] <= 0)
                 {
-                    _spawning = new Asteroid("asteroid_" + _total_spawned_asteroids, 100);
-                    _spawning.Scale = new Vector3(200, 200, 200);
+                    int caseSwitch = random.Next(1, 4);
+                    switch (caseSwitch)
+                    {
+                        case 1:
+                            spawning = new Asteroid("asteroid_" + _total_spawned_asteroids, 200);
+                            spawning.Scale = new Vector3(80, 80, 80);
+                            speedMultiplier = 3;
+                            break;
+                        case 2:
+                            spawning = new Asteroid("asteroid_" + _total_spawned_asteroids, 400);
+                            spawning.Scale = new Vector3(140, 140, 140);
+                            speedMultiplier = 2;
+                            break;
+                        case 3:
+                            spawning = new Asteroid("asteroid_" + _total_spawned_asteroids, 800);
+                            spawning.Scale = new Vector3(200, 200, 200);
+                            speedMultiplier = 1;
+                            break;
+                        default:
+                            spawning = new Asteroid("asteroid_" + _total_spawned_asteroids, 200);
+                            spawning.Scale = new Vector3(50, 50, 50);
+                            speedMultiplier = 3;
+                            break;
+                    }
 
-                    _spawning.Position = _spawnpoints[_selectedSpawnPoint];
+                    spawning.Position = _spawnpoints[_selectedSpawnPoint];
                     double angleRatio = random.NextDouble() - 0.5f;
                     float angle = _spawnpoint_angles[_selectedSpawnPoint] + _spawnRange * (float)angleRatio;
                     double speedRatio = random.NextDouble();
-                    float speed = (_maxAsteroidSpeed - _minAsteroidSpeed) * (float)speedRatio + _minAsteroidSpeed;
-                    _spawning.Velocity = new Vector3(speed * (float)Math.Sin(angle), 0, speed * (float)Math.Cos(angle));
+                    float speed = ((_maxAsteroidSpeed - _minAsteroidSpeed) * (float)speedRatio + _minAsteroidSpeed) * speedMultiplier;
+                    spawning.Velocity = new Vector3(speed * (float)Math.Sin(angle), 0, speed * (float)Math.Cos(angle));
 
-                    _asteroids.Add(_spawning);
+                    _asteroids.Add(spawning);
                     _num_asteroids_on_screen++;
                     _total_spawned_asteroids++;
                     //Output.WriteLine("spawned:" + _total_spawned_asteroids + "from: " + _selectedSpawnPoint);
-                    _spawnpoint_times[_selectedSpawnPoint] = _min_spawning_time;
+                    _spawnpoint_times[_selectedSpawnPoint] = _min_spawning_delay * (1/speedMultiplier);  //if asteroid is small, spawn happens more often!
                 }
             }
 
@@ -531,7 +564,7 @@ namespace Game.States
 
         private void ScrollPlanet()
         {
-
+            //_terrain.Position = new Vector3(_terrain.Position.X, _terrain.Position.Y, _terrain.Position.Z - 1);
         }
 
         private void Physics()
@@ -539,18 +572,21 @@ namespace Game.States
 
             foreach (Bullet bullet in _bullets)
             {
-                foreach (Asteroid asteroid in _asteroids)
+                if (!bullet.IsDead)
                 {
-                    bullet.Move();
-
-                    if (IsOutOfView(bullet.Position))
-                        bullet.IsDead = true;
-                    else if (!asteroid.IsDead && asteroid.HasCollided(bullet.Position))
+                    foreach (Asteroid asteroid in _asteroids)
                     {
-                        asteroid.Hit(200);
-                        bullet.IsDead = true;
-                        _num_asteroids_on_screen--;
-                        //_bullets.Remove(bullet);  //CAN'T DO IN CURRENTLY SCROLLING LIST!!
+                        bullet.Move();
+
+                        if (IsOutOfView(bullet.Position))
+                            bullet.IsDead = true;
+                        else if (!asteroid.IsDead && asteroid.HasCollided(bullet.Position))
+                        {
+                            asteroid.Hit(20);
+                            bullet.IsDead = true;
+                            _num_asteroids_on_screen--;
+                            //_bullets.Remove(bullet);  //CAN'T DO IN CURRENTLY SCROLLING LIST!!
+                        }
                     }
                 }
             }

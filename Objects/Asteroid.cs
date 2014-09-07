@@ -67,7 +67,7 @@ namespace Game.Objects
 
         public void Hit(int damage)
         {
-            _damage += damage;
+            _damage = _damage + damage;
             if (_damage >= _health)
                 _isDead = true;
         }
