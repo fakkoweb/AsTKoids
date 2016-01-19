@@ -1,28 +1,39 @@
-﻿using Game.Objects.Types;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// Last Edited: 08-09-14
+
+using AsTKoids.Objects.Types;
 using OpenTK;
-using Seven.Mathematics;
 using SevenEngine;
+using SevenEngine.Imaging;
 using SevenEngine.Physics.Primitives;
 using SevenEngine.StaticModels;
+using Seven.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game.Objects
+namespace AsTKoids.Objects
 {
     class Dreadnaught : Unit
     {
-        protected RectangularPrism _box;
+        //Sphere does not need to be transformed and seems to behave better than RectangularPrism, change if you prefer more precise Collision Detection
+        //Warning: remember to save also a copy of Prism dimensions and set them in the SET for Scale
+        protected Sphere _box;
+        protected float _boxRadius;
 
         protected StaticModel _backModel;
-        protected SmallCannon[] _frontCannons;
+        protected SmallCannon[] _cannons;
         protected SmallCannon[] _backCannons;
         protected StaticModel[] _coolerLeftModels;
         protected StaticModel[] _coolerRightModels;
         protected StaticModel[] _ringModels;
-        float _ringAnimateAngle;
+        float _ringAnimateAngle = 0;
+        Vector3 _last_target_position = new Vector3(0, 0, 0);
+        Quaternion _last_target_orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
+        float _stopRotationFactor = 1;
 /*
         protected AvlTree<StaticModel> _cannonModels;
         protected AvlTree<StaticModel> _coolerModels;
@@ -38,9 +49,11 @@ namespace Game.Objects
             }
             set
             { 
-                _mainModel.Scale = value; 
-                _box.Width = _box.Width*_mainModel.Scale.X; 
-                _box.Height = _box.Height*_mainModel.Scale.Z;
+                _mainModel.Scale = value;
+                // Change collider scale accordingly
+                //_box.Width = _box.Width*_mainModel.Scale.X; 
+                //_box.Height = _box.Height*_mainModel.Scale.Z;
+                _box.Radius = _boxRadius * _mainModel.Scale.Z;
                 foreach (StaticModel childModel in _mainModel.ChildrenModels)
                 {
                     childModel.Scale = new Vector3(value.X, value.Y, value.Z);
@@ -49,14 +62,11 @@ namespace Game.Objects
                 {
                     childModel.Scale = new Vector3(value.X, value.Y, value.Z);
                 }
-                foreach (SmallCannon cannon in _frontCannons)
+                foreach (SmallCannon cannon in _cannons)
                 {
                     cannon.Scale = cannon.Scale * 2;
                 }
-                /*foreach (SmallCannon cannon in _backCannons)
-                {
-                    cannon.Scale = cannon.Scale * 2;
-                }*/
+
             } 
         }
         public override Quaternion Orientation
@@ -83,13 +93,16 @@ namespace Game.Objects
                 _box.Orientation = _mainModel.OrientationRelative;
             }
         }
-        public RectangularPrism BoundingBox { get { return _box; } set { _box = value; } }
+        public Sphere BoundingBox { get { return _box; } set { _box = value; } }
+        public SmallCannon[] Cannons { get { return _cannons; } }
 
         public Dreadnaught(string id)
-            : base(id, "Dreadnaught_front_model", 0.5f, 10000, 4, 0.01f, 100000)
+            : base(id, "Dreadnaught_front_model", 0.87f, 10000, 4, 0.01f, 100000)
         {
             //Collider
-            _box = new RectangularPrism(25, 94, Position);
+            _boxRadius = 24.5f;
+            //_box = new RectangularPrism(25, 94, Position);
+            _box = new Sphere(Position, _boxRadius, new Quaternion(0, 0, 0, 1));
 
             //Back side
             _backModel = StaticModelManager.GetModel("Dreadnaught_back_model");
@@ -102,39 +115,40 @@ namespace Game.Objects
             _ringModels[0].setParent(_mainModel);
             _ringModels[1] = StaticModelManager.GetModel("Dreadnaught_ring_model");
             _ringModels[1].Position = new Vector3(0, -0.60810f, -3.0701f);     //this tilt is a fix
-            //_ringModels[1].Scale = new Vector3(1, -1, 1);
             _ringModels[1].setParent(_backModel);
-            _ringAnimateAngle = 0;
 
             //Cannons
-            _frontCannons = new SmallCannon[5];
-            for (int i = 0; i < _frontCannons.Length; i++)
+            _cannons = new SmallCannon[7];
+            for (int i = 0; i < _cannons.Length; i++)
             {
-                _frontCannons[i] = new SmallCannon(id + "_SmallCannon_" + (i+1) );
-                _frontCannons[i].StaticModel.Id = id + "_SmallCannon_" + (i+1) ;
-                _frontCannons[i].FireSpeed = 3;
+                _cannons[i] = new SmallCannon(id + "_SmallCannon_" + (i+1) );
+                _cannons[i].StaticModel.Id = id + "_SmallCannon_" + (i+1) ;
+                _cannons[i].FireSpeed = 3;
             }
 
-            float offset = 1f;
+            float offset = 0.5f;
             //Upper Front cannons positions
-            _frontCannons[0].StaticModel.PositionRelative = new Vector3(5f,2.467f+offset,40.251f);
-            _frontCannons[0].StaticModel.setParent(_mainModel);
-            _frontCannons[1].StaticModel.PositionRelative = new Vector3(-5f, 2.467f+offset, 40.251f);
-            _frontCannons[1].StaticModel.setParent(_mainModel);
-            _frontCannons[2].StaticModel.PositionRelative = new Vector3(6.793f, 3.102f+offset, 24.521f);
-            _frontCannons[2].StaticModel.setParent(_mainModel);
-            _frontCannons[3].StaticModel.PositionRelative = new Vector3(-6.793f, 3.102f+offset, 24.521f);
-            _frontCannons[3].StaticModel.setParent(_mainModel);
+            _cannons[0].StaticModel.PositionRelative = new Vector3(5f,2.467f+offset,40.251f);
+            _cannons[0].StaticModel.setParent(_mainModel);
+            _cannons[1].StaticModel.PositionRelative = new Vector3(-5f, 2.467f+offset, 40.251f);
+            _cannons[1].StaticModel.setParent(_mainModel);
+            _cannons[2].StaticModel.PositionRelative = new Vector3(6.793f, 3.102f+offset, 24.521f);
+            _cannons[2].StaticModel.setParent(_mainModel);
+            _cannons[3].StaticModel.PositionRelative = new Vector3(-6.793f, 3.102f+offset, 24.521f);
+            _cannons[3].StaticModel.setParent(_mainModel);
             //Lower Front cannons positions
-            _frontCannons[4].StaticModel.PositionRelative = new Vector3(0, -6.162f-offset, 24.521f);
-            _frontCannons[4].StaticModel.OrientationRelative = Geometric.Generate_Quaternion(Constants.pi_float, 0, 0, 1);
-            _frontCannons[4].StaticModel.setParent(_mainModel);
-            /*
-            _frontCannons[0].StaticModel.PositionRelative = new Vector3(5f, 2.467f, 40.251f);
-            _frontCannons[0].StaticModel.setParent(_backModel);
-            _frontCannons[0].StaticModel.PositionRelative = new Vector3(5f, 2.467f, 40.251f);
-            _frontCannons[0].StaticModel.setParent(_backModel);
+            _cannons[4].StaticModel.PositionRelative = new Vector3(0, -6.162f-offset, 24.521f);
+            _cannons[4].StaticModel.OrientationRelative = Geometric.Generate_Quaternion(Constants.pi_float, 0, 0, 1);
+            _cannons[4].StaticModel.setParent(_mainModel);
+            //Lower Back cannons positions
+            _cannons[5].StaticModel.PositionRelative = new Vector3(5.93f, -7.01f-offset, -22f);
+            _cannons[5].StaticModel.OrientationRelative = Geometric.Generate_Quaternion(Constants.pi_float, 0, 0, 1);
+            _cannons[5].StaticModel.setParent(_backModel);
+            _cannons[6].StaticModel.PositionRelative = new Vector3(-5.93f, -7.01f-offset, -22f);
+            _cannons[6].StaticModel.OrientationRelative = Geometric.Generate_Quaternion(Constants.pi_float, 0, 0, 1);
+            _cannons[6].StaticModel.setParent(_backModel);
             
+            /*
             _coolerLeftModels = new StaticModel[3];
             _coolerRightModels = new StaticModel[3];
             _ringModels = new StaticModel[2];
@@ -146,6 +160,7 @@ namespace Game.Objects
                 _coolerRightModels[i].Scale = new Vector3( - _coolerRightModels[i].Scale.X, _coolerRightModels[i].Scale.Y, _coolerRightModels[i].Scale.Z);
             }
 
+            
             //TODO setup cannons and coolers relative positions
             _frontCannons[0].Position = new Vector3(0, 0, 0);
             _frontCannons[1].Position = new Vector3(0, 0, 0);
@@ -168,7 +183,7 @@ namespace Game.Objects
 
         public void UpdateStandard()
         {
-            foreach (SmallCannon cannon in _frontCannons)
+            foreach (SmallCannon cannon in _cannons)
             {
                 cannon.UpdateStandard();
             }
@@ -181,25 +196,52 @@ namespace Game.Objects
 
         public void LookAt(Vector3 targetRef)
         {
-            Quaternion new_orientation = Geometric.FreeLookAt(_mainModel,targetRef, new Vector3(0, 1, 0));
-            OrientationRelative = Quaternion.Slerp(_mainModel.OrientationRelative, new_orientation, Game.DeltaTime * 0.001f * _maxRotSpeed);
-
+            Quaternion new_target_orientation = Geometric.FreeLookAt(_mainModel,targetRef, new Vector3(0, 1, 0));
+            Orientation = Quaternion.Slerp(_mainModel.Orientation, new_target_orientation, Game.DeltaTime * 0.001f * _maxRotSpeed);
+            _last_target_orientation = new_target_orientation;
             //Output.WriteLine(_frontCannons[0].StaticModel.PositionRelative + ", " + _frontCannons[1].StaticModel.PositionRelative);
+        }
+
+        public void AlignTo(Vector3 targetRef)
+        {
+            if (targetRef != _last_target_position)
+            {
+                _last_target_position = targetRef;
+                _last_target_orientation = Geometric.FreeLookAt(_mainModel, _last_target_position, new Vector3(0, 1, 0));
+            }
+            Orientation = Quaternion.Slerp(_mainModel.Orientation, _last_target_orientation, Game.DeltaTime * 0.001f * _maxRotSpeed);
         }
 
         public void AimAt(Vector3 targetRef)
         {
-            foreach (SmallCannon cannon in _frontCannons)
+            foreach (SmallCannon cannon in _cannons)
             {
                 cannon.LookAt(targetRef);
             }
         }
-
         
         public List<Bullet> Shoot(Vector3 targetRef)        //target is used to determine which cannon will fire!
         {
             List<Bullet> bulletsShot = new List<Bullet>();
-            foreach (SmallCannon cannon in _frontCannons)
+            List<SmallCannon> cannonsToShoot = new List<SmallCannon>();
+
+            //Transforming target coordinates in dreadnaught system
+            Vector3 targetRelative = Geometric.Quaternion_Rotate(Orientation.Inverted(), targetRef - Position);
+            //Defining fire zones (relative to the ship's system)
+            if (targetRelative.Z > -80 * Scale.Z)    //this value is chosen knowing that 95 is approx. ship lenght for scale = 1 (measured in blender)
+            {
+                cannonsToShoot.Add(_cannons[0]);
+                cannonsToShoot.Add(_cannons[1]);
+                cannonsToShoot.Add(_cannons[2]);
+                cannonsToShoot.Add(_cannons[3]);
+                cannonsToShoot.Add(_cannons[4]);
+            }
+            if (targetRelative.Z < 80 * Scale.Z)
+            {
+                cannonsToShoot.Add(_cannons[5]);
+                cannonsToShoot.Add(_cannons[6]);
+            }
+            foreach (SmallCannon cannon in cannonsToShoot)
             {
                 Bullet newBullet = cannon.Shoot();
                 if (newBullet != null) bulletsShot.Add(newBullet);
