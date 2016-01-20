@@ -26,14 +26,15 @@ namespace AsTKoids.Objects
 
         protected StaticModel _backModel;
         protected SmallCannon[] _cannons;
-        protected SmallCannon[] _backCannons;
-        protected StaticModel[] _coolerLeftModels;
-        protected StaticModel[] _coolerRightModels;
+        // Future use..
+        //protected SmallCannon[] _backCannons;
+        //protected StaticModel[] _coolerLeftModels;
+        //protected StaticModel[] _coolerRightModels;
         protected StaticModel[] _ringModels;
         float _ringAnimateAngle = 0;
         Vector3 _last_target_position = new Vector3(0, 0, 0);
         Quaternion _last_target_orientation = Geometric.Generate_Quaternion(0, 0, 0, 0);
-        float _stopRotationFactor = 1;
+        //float _stopRotationFactor = 1;
 /*
         protected AvlTree<StaticModel> _cannonModels;
         protected AvlTree<StaticModel> _coolerModels;

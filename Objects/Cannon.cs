@@ -1,7 +1,10 @@
-﻿using Game.Objects.Types;
-using Game.Objects.Types.Properties;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// Last Edited: 08-09-14
+
+using AsTKoids.Objects.Types;
+using AsTKoids.Objects.Types.Behaviours;
 using OpenTK;
-using Seven.Mathematics;
 using SevenEngine;
 using SevenEngine.StaticModels;
 using System;
@@ -10,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game.Objects
+namespace AsTKoids.Objects
 {
     class Cannon : DynamicSubsystem, Weapon
     {
@@ -63,7 +66,7 @@ namespace Game.Objects
             {
                 if (_mainModel.IsChild)
                 {
-                    _bulletVector = (Geometric.Quaternion_Rotate(_mainModel.Orientation, value)) - _mainModel.Position;
+                    _bulletVector = Geometric.Quaternion_Rotate(_mainModel.Orientation.Inverted(), value);
                 }
                 else
                     _bulletVector = value;
@@ -114,13 +117,14 @@ namespace Game.Objects
             _fireTime -= Game.DeltaTime * 0.001f;
         }
 
-        public Bullet Shoot()
+        public virtual Bullet Shoot()
         {
             if (_fireTime <= 0)
             {
                 //Output.WriteLine("Shoot!");
                 Bullet _spawning = new Bullet(BulletHole, BulletVector);
-                _fireTime = 1/_fireSpeed;    //two seconds for each new spawn
+                _spawning.Health = 20;       //Bullet health is used as the damage it can cause!
+                _fireTime = 1/_fireSpeed;    //reset firetime
                 return _spawning;
             }
             else

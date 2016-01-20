@@ -1,9 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game.csproj", "{D7D77C27-C378-4A58-98FA-AB14289176BC}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsTKoids", "AsTKoids.csproj", "{D7D77C27-C378-4A58-98FA-AB14289176BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0251CEE2-7F70-4FDD-B385-5655EBA10330} = {0251CEE2-7F70-4FDD-B385-5655EBA10330}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenEngine", "..\SevenEngine\SevenEngine\SevenEngine.csproj", "{0251CEE2-7F70-4FDD-B385-5655EBA10330}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenEngine", "..\SevenEngine\SevenEngine.csproj", "{0251CEE2-7F70-4FDD-B385-5655EBA10330}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

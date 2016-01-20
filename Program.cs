@@ -1,6 +1,11 @@
-﻿using System;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// - Zachary Aaron Patten (aka Seven) seven@sevenengine.com -- for Seven library and importer
+// Last Edited: 08-09-14
 
-namespace Game
+using System;
+
+namespace AsTKoids
 {
   static class Program
   {
@@ -8,7 +13,7 @@ namespace Game
     static void Main()
     {
       // you can select the starting window size here
-      using (Game game = new Game(1280, 800)) { game.Run(); }
+      using (Game game = new Game(1280, 720)) { game.Run(); }
     }
   }
 }

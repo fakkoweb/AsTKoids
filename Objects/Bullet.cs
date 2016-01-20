@@ -1,4 +1,8 @@
-﻿using Game.Objects.Types.Properties;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// Last Edited: 08-09-14
+
+using AsTKoids.Objects.Types.Behaviours;
 using OpenTK;
 using System;
 using System.Collections.Generic;
@@ -6,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game.Objects
+namespace AsTKoids.Objects
 {
     public class Bullet : Damageable
     {
@@ -33,7 +37,7 @@ namespace Game.Objects
 
         public void Move()
         {
-            Position = new Vector3(Position.X + Velocity.X * Game.DeltaTime, Position.Y + Velocity.Y * Game.DeltaTime, Position.Z + Velocity.Z * Game.DeltaTime);
+            Position = new Vector3(Position.X + Velocity.X, Position.Y + Velocity.Y, Position.Z + Velocity.Z);
         }
 
     }

@@ -1,14 +1,16 @@
-﻿using Seven.Mathematics;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// Last Edited: 08-09-14
+
+using OpenTK;
 using SevenEngine;
 using SevenEngine.StaticModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using OpenTK;
+ 
 
-namespace Game.Objects
+namespace AsTKoids.Objects
 {
     class SmallCannon : Cannon
     {
@@ -24,8 +26,6 @@ namespace Game.Objects
         public void LookAt(Vector3 targetRef)
         {
           
-            //Cannon must stay parallel to plane level
-            Vector3 see_vector = targetRef - _mainModel.Position;
             _mainModel.Orientation = Geometric.FreeLookAt(_mainModel, targetRef, new Vector3(0, 1, 0));
 
 

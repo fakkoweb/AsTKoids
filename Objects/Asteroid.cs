@@ -1,14 +1,16 @@
-﻿using Game.Objects.Types.Properties;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// Last Edited: 08-09-14
+
+using AsTKoids.Objects.Types.Behaviours;
 using OpenTK;
 using SevenEngine;
 using SevenEngine.Physics.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Game.Objects
+namespace AsTKoids.Objects
 {
     public class Asteroid : Movable, Damageable
     {
@@ -65,11 +67,18 @@ namespace Game.Objects
             Position = new Vector3(Position.X + Velocity.X * Game.DeltaTime, Position.Y + Velocity.Y * Game.DeltaTime, Position.Z + Velocity.Z * Game.DeltaTime);
         }
 
-        public void Hit(int damage)
+        public int Hit(int damage)
         {
             _damage = _damage + damage;
             if (_damage >= _health)
+            {
                 _isDead = true;
+                return _health;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public bool HasCollided(Vector3 point)
