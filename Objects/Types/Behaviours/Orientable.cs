@@ -1,15 +1,18 @@
-﻿using OpenTK;
+﻿// Author(s):
+// - Dario Facchini io.dariofacchini@gmail.com
+// Last Edited: 08-09-14
+
+ 
 using Seven.Mathematics;
 using SevenEngine;
 using SevenEngine.StaticModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using OpenTK;
 
 
-namespace Game.Objects.Types.Properties
+namespace AsTKoids.Objects.Types.Behaviours
 {
     public class Orientable : Static
     {
