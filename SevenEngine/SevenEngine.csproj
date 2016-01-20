@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0251CEE2-7F70-4FDD-B385-5655EBA10330}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SevenEngine</RootNamespace>
+    <AssemblyName>SevenEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="InterfaceGameState.cs" />
+    <Compile Include="MANAGERS\StateManager.cs" />
+    <Compile Include="Shapes\Plane.cs" />
+    <Compile Include="Shapes\Ray.cs" />
+    <Compile Include="SevenEngineWindow.cs" />
+    <Compile Include="Utils\Camera.cs" />
+    <Compile Include="Utils\FilePath.cs" />
+    <Compile Include="Utils\Geometric.cs" />
+    <Compile Include="Utils\Output.cs" />
+    <Compile Include="Utils\Renderer.cs" />
+    <Compile Include="Utils\SkyBox.cs" />
+    <Compile Include="Utils\Timer.cs" />
+    <Compile Include="Texts\CharacterSprite.cs" />
+    <Compile Include="Texts\Font.cs" />
+    <Compile Include="Texts\Text.cs" />
+    <Compile Include="StaticModels\StaticMesh.cs" />
+    <Compile Include="StaticModels\StaticModel.cs" />
+    <Compile Include="Shaders\ExtendedGeometryShader.cs" />
+    <Compile Include="Shaders\FragmentShader.cs" />
+    <Compile Include="Shaders\GeometryShader.cs" />
+    <Compile Include="Shaders\ShaderProgram.cs" />
+    <Compile Include="Shaders\VertexShader.cs" />
+    <Compile Include="Shapes\Cone.cs" />
+    <Compile Include="Shapes\Cube.cs" />
+    <Compile Include="Shapes\Cylinder.cs" />
+    <Compile Include="Shapes\RectangularPrism.cs" />
+    <Compile Include="Shapes\Sphere.cs" />
+    <Compile Include="Shapes\TriangularPrism.cs" />
+    <Compile Include="Shapes\TriangularPyramid.cs" />
+    <Compile Include="Shapes\Interfaces\InterfaceShape.cs" />
+    <Compile Include="MANAGERS\GraphicsSettingsManager.cs" />
+    <Compile Include="MANAGERS\InputManager.cs" />
+    <Compile Include="MANAGERS\ShaderManager.cs" />
+    <Compile Include="MANAGERS\StaticModelManager.cs" />
+    <Compile Include="MANAGERS\TextManager.cs" />
+    <Compile Include="MANAGERS\TextureManager.cs" />
+    <Compile Include="Input\Keyboard.cs" />
+    <Compile Include="Input\Mouse.cs" />
+    <Compile Include="Imaging\Color.cs" />
+    <Compile Include="Imaging\Texture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Seven, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Seven.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="OpenTK">
+      <HintPath>..\References\OpenTK.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+</Project>
