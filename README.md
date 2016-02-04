@@ -4,8 +4,8 @@
 
 AsTKoids is a very simple [2.5D][25dgame] space game freely inspired to the classic Asteroids. A spaceship (the 3D model is a custom design from blender adapted for the game) has to avoid or shoot down several asteroids coming at player from different directions. The ship has several cannons it can fire lasers from, but they can only fire when the target is under their reach: for example, when shooting from the front of the ship, only front cannons will fire. The player is challenged not only to survive, but also to find the best orientation for the spaceship to fire at targets and be more effective.
 <img src="screenshots/screenmain.png" width="900px">
-<img src="screenshots/screen1.png" width="450px"><img src="screenshots/screen2.png" width="450px"> 
-<img src="screenshots/screen3.png" width="450px"><img src="screenshots/screen4.png" width="450px"> 
+<img src="screenshots/screen1.png" width="420px"><img src="screenshots/screen2.png" width="420px"> 
+<img src="screenshots/screen3.png" width="420px"><img src="screenshots/screen4.png" width="420px"> 
 
 ### Bit of history
 
